@@ -30,14 +30,14 @@ const routes: AppRouteConfig[] = [
   {
     component: Dashboard,
     exact: true,
-    label: 'Dashboard',
+    label: 'Workspaces',
     path: '/',
     title: 'PatternFly Seed | Main Dashboard',
   },
   {
     component: Support,
     exact: true,
-    label: 'Support',
+    label: 'Workspace Kind',
     path: '/support',
     title: 'PatternFly Seed | Support Page',
   },
@@ -99,7 +99,7 @@ const PageNotFound = ({ title }: { title: string }) => {
 
 const flattenedRoutes: IAppRoute[] = routes.reduce(
   (flattened, route) => [...flattened, ...(route.routes ? route.routes : [route])],
-  [] as IAppRoute[]
+  [] as IAppRoute[],
 );
 
 const AppRoutes = (): React.ReactElement => (
