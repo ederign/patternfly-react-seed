@@ -3,22 +3,27 @@ import { NavLink, useLocation } from 'react-router-dom';
 import {
   Brand,
   Button,
+  Flex,
+  FlexItem,
   Masthead,
   MastheadBrand,
+  MastheadContent,
   MastheadMain,
   MastheadToggle,
-	Nav,
+  Nav,
   NavExpandable,
   NavItem,
-	NavList,
-	Page,
-	PageSidebar,
+  NavList,
+  Page,
+  PageSidebar,
   PageSidebarBody,
-	SkipToContent
+  SkipToContent,
+  span,
 } from '@patternfly/react-core';
 import { IAppRoute, IAppRouteGroup, routes } from '@app/routes';
 import logo from '@app/bgimages/Patternfly-Logo.svg';
 import { BarsIcon } from '@patternfly/react-icons';
+import { ContextSelectorDemo } from './Namespace';
 
 interface IAppLayout {
   children: React.ReactNode;
@@ -34,10 +39,13 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
         </Button>
       </MastheadToggle>
       <MastheadMain>
-        <MastheadBrand>
-          <Brand src={logo} alt="Patterfly Logo" heights={{ default: '36px' }} />
-        </MastheadBrand>
+        <MastheadBrand>Kubeflow Workspace Spawner</MastheadBrand>
       </MastheadMain>
+      <MastheadContent>
+        <Flex>
+          <ContextSelectorDemo />
+        </Flex>
+      </MastheadContent>
     </Masthead>
   );
 
@@ -66,37 +74,34 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     <Nav id="nav-primary-simple" theme="dark">
       <NavList id="nav-list-simple">
         {routes.map(
-          (route, idx) => route.label && (!route.routes ? renderNavItem(route, idx) : renderNavGroup(route, idx))
+          (route, idx) => route.label && (!route.routes ? renderNavItem(route, idx) : renderNavGroup(route, idx)),
         )}
       </NavList>
     </Nav>
   );
 
   const Sidebar = (
-    <PageSidebar theme="dark" >
-      <PageSidebarBody>
-        {Navigation}
-      </PageSidebarBody>
+    <PageSidebar theme="dark">
+      <PageSidebarBody>{Navigation}</PageSidebarBody>
     </PageSidebar>
   );
 
   const pageId = 'primary-app-container';
 
   const PageSkipToContent = (
-    <SkipToContent onClick={(event) => {
-      event.preventDefault();
-      const primaryContentContainer = document.getElementById(pageId);
-      primaryContentContainer && primaryContentContainer.focus();
-    }} href={`#${pageId}`}>
+    <SkipToContent
+      onClick={(event) => {
+        event.preventDefault();
+        const primaryContentContainer = document.getElementById(pageId);
+        primaryContentContainer && primaryContentContainer.focus();
+      }}
+      href={`#${pageId}`}
+    >
       Skip to Content
     </SkipToContent>
   );
   return (
-    <Page
-      mainContainerId={pageId}
-      header={Header}
-      sidebar={sidebarOpen && Sidebar}
-      skipToContent={PageSkipToContent}>
+    <Page mainContainerId={pageId} header={Header} sidebar={sidebarOpen && Sidebar} skipToContent={PageSkipToContent}>
       {children}
     </Page>
   );

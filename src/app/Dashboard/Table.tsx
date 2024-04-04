@@ -1,4 +1,18 @@
 import React from 'react';
+import {
+  ActionGroup,
+  Button,
+  Checkbox,
+  Form,
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+  Popover,
+  Radio,
+  TextArea,
+  TextInput,
+} from '@patternfly/react-core';
 
 import {
   Button,
@@ -20,25 +34,51 @@ import {
   PaginationVariant,
   Text,
   TextContent,
+  TextInputGroup,
   TextVariants,
   Toolbar,
   ToolbarContent,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { Table, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { ExpandableRowContent, Table, TableText, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import SortAmountDownIcon from '@patternfly/react-icons/dist/esm/icons/sort-amount-down-icon';
 import { DashboardWrapper } from '@patternfly/react-table/dist/esm/demos/DashboardWrapper';
 import { capitalize } from '@patternfly/react-table/src/components/Table/utils/utils';
-import { SampleDataRow, columns, rows } from '@patternfly/react-table/dist/esm/demos/sampleData';
+import { SampleDataRow } from '@patternfly/react-table/dist/esm/demos/sampleData';
 import { Header } from './Header';
 import { SearchInput } from '@patternfly/react-core';
+import { columns, rows } from './myData';
+import { Icon } from '@patternfly/react-core';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
+import { PlayCircleIcon, StopIcon } from '@patternfly/react-icons';
+import { WizardInModalDemo } from './WizardInModalDemo';
+import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 
+import {
+  Card,
+  CardBody,
+  Gallery,
+  GalleryItem,
+  Modal,
+  ModalVariant,
+  PageSection,
+  Wizard,
+  WizardHeader,
+  WizardStep,
+} from '@patternfly/react-core';
+import { CardViewBasic } from './KindCard';
 export const TableColumnManagement: React.FunctionComponent = () => {
+  const [isModalOpen, setIsModalOpen] = React.useState(true);
+  const handleModalToggle = (_event: KeyboardEvent | React.MouseEvent) => {
+    setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
+  };
+
   const defaultColumns = columns;
   const defaultRows = rows;
 
   const [filters, setFilters] = React.useState<string[]>([]);
+
   const [filteredColumns, setFilteredColumns] = React.useState<string[]>([]);
   const [filteredRows, setFilteredRows] = React.useState<SampleDataRow[]>([]);
   const [managedColumns, setManagedColumns] = React.useState<string[]>(defaultColumns);
@@ -52,7 +92,7 @@ export const TableColumnManagement: React.FunctionComponent = () => {
   const matchCheckboxNameToColumn = (name: string): string => {
     switch (name) {
       case 'check1':
-        return 'Servers';
+        return 'Nome';
       case 'check2':
         return 'Threads';
       case 'check3':
@@ -74,7 +114,7 @@ export const TableColumnManagement: React.FunctionComponent = () => {
 
   const matchSelectedColumnNameToAttr = (name: string): string => {
     switch (name) {
-      case 'Servers':
+      case 'Nome':
         return 'name';
       case 'Threads':
         return 'threads';
@@ -212,7 +252,6 @@ export const TableColumnManagement: React.FunctionComponent = () => {
   const renderModal = () => (
     <Modal
       title="Manage columns"
-      isOpen={isModalOpen}
       variant="small"
       description={
         <TextContent>
@@ -222,7 +261,6 @@ export const TableColumnManagement: React.FunctionComponent = () => {
           </Button>
         </TextContent>
       }
-      onClose={handleModalToggle}
       actions={[
         <Button key="save" variant="primary" onClick={onSave}>
           Save
@@ -387,7 +425,7 @@ export const TableColumnManagement: React.FunctionComponent = () => {
         return <Label color="green">{labelText}</Label>;
       case 'Stopped':
         return <Label color="orange">{labelText}</Label>;
-      case 'Needs maintenance':
+      case 'Running (pending restart)':
         return <Label color="blue">{labelText}</Label>;
       case 'Down':
         return <Label color="red">{labelText}</Label>;
@@ -398,6 +436,114 @@ export const TableColumnManagement: React.FunctionComponent = () => {
 
   const toolbarItems = (
     <React.Fragment>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleModalToggle}
+        variant={ModalVariant.large}
+        showClose={false}
+        hasNoBodyWrapper
+        aria-describedby="wiz-modal-demo-description"
+        aria-labelledby="wiz-modal-demo-title"
+      >
+        <Wizard
+          header={
+            <WizardHeader
+              title="Wizard in modal"
+              titleId="wiz-modal-demo-title"
+              description="Simple wizard description"
+              descriptionId="wiz-modal-demo-description"
+              closeButtonAriaLabel="Close wizard"
+            />
+          }
+          height={400}
+          onClose={handleModalToggle}
+        >
+          <WizardStep
+            name="Workspace"
+            id="wizard-step-1"
+            steps={[
+              <WizardStep name="Description" id="wizard-step-1a" key="wizard-step-1a">
+                <Form>
+                  <FormGroup label="Name">
+                    <TextInput
+                      isRequired={true}
+                      type="text"
+                      id="simple-form-name-01"
+                      name="simple-form-name-01"
+                      aria-describedby="simple-form-name-01-helper"
+                      value=""
+                    />
+                    <FormHelperText>
+                      <HelperText>
+                        <HelperTextItem>Some help if necessary.</HelperTextItem>
+                      </HelperText>
+                    </FormHelperText>
+                  </FormGroup>
+                  <FormGroup label="NameSpace">
+                    <TextInput
+                      isRequired={true}
+                      isDisabled={true}
+                      type="text"
+                      id="simple-form-name-01"
+                      name="simple-form-name-01"
+                      aria-describedby="simple-form-name-01-helper"
+                      value="user-namespace"
+                    />
+                  </FormGroup>
+                  <FormGroup label="Description">
+                    <TextArea
+                      isRequired={true}
+                      type="text"
+                      id="simple-form-name-01"
+                      name="simple-form-name-01"
+                      aria-describedby="simple-form-name-01-helper"
+                      value=""
+                    />
+                  </FormGroup>
+                </Form>
+              </WizardStep>,
+              <WizardStep name="Kind" id="wizard-step-1b" key="wizard-step-1b">
+                <CardViewBasic />
+              </WizardStep>,
+              <WizardStep name="Kind Options" id="wizard-step-1c" key="wizard-step-1c">
+                <p>
+                  Similar for the "image options" which will appear on the next page (but probably as a a table, rather
+                  than card view, because they dont have an SVG). The "image option" The "pod config option" (which
+                  defines the "small gpu" thing
+                </p>
+              </WizardStep>,
+            ]}
+          />
+          <WizardStep
+            name="Configuration"
+            id="wizard-step-2"
+            steps={[
+              <WizardStep name="Substep A" id="wizard-step-2a" key="wizard-step-2a">
+                <p>Configuration substep A</p>
+              </WizardStep>,
+              <WizardStep name="Substep B" id="wizard-step-2b" key="wizard-step-2b">
+                <p>Configuration substep B</p>
+              </WizardStep>,
+            ]}
+          />
+          <WizardStep name="Additional" id="wizard-step-3">
+            <p>Step 3 content</p>
+          </WizardStep>
+          <WizardStep
+            name="Review"
+            id="wizard-step-4"
+            footer={{
+              nextButtonText: 'Finish',
+              onNext: () => {
+                setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
+              },
+            }}
+          >
+            <p>Review step content</p>
+          </WizardStep>
+        </Wizard>
+      </Modal>
+
       <Header />
       <Toolbar id="page-layout-table-column-management-action-toolbar-top">
         <span id="page-layout-table-column-management-action-toolbar-top-select-checkbox-label" hidden>
@@ -421,7 +567,9 @@ export const TableColumnManagement: React.FunctionComponent = () => {
                   <SearchInput placeholder="Find by name" value="" />
                 </OverflowMenuItem>
                 <OverflowMenuItem isPersistent>
-                  <Button variant="primary">Create Workspace</Button>
+                  <Button onClick={handleModalToggle} variant="primary">
+                    Create Workspace
+                  </Button>
                 </OverflowMenuItem>
                 <OverflowMenuItem isPersistent>
                   <Button variant="danger">Delete</Button>
@@ -437,6 +585,7 @@ export const TableColumnManagement: React.FunctionComponent = () => {
 
   return (
     <React.Fragment>
+      <WizardInModalDemo />
       <PageSection isFilled>
         <Card>
           {toolbarItems}
@@ -449,25 +598,49 @@ export const TableColumnManagement: React.FunctionComponent = () => {
                   }}
                 />
                 {managedColumns.map((column, columnIndex) => (
-                  <Th key={columnIndex}>{column}</Th>
+                  <Th sort={true} key={columnIndex}>
+                    {column}
+                  </Th>
                 ))}
+                <Th>Manage</Th>
+                <Th width={15}>Connect</Th>
+                <Th>Edit</Th>
               </Tr>
             </Thead>
             <Tbody>
               {paginatedRows.map((row, rowIndex) => (
-                <Tr key={rowIndex}>
+                <Tr isExpanded={true} key={rowIndex}>
                   <>
                     <Td
                       select={{
                         isSelected: false,
                       }}
-                    />
+                    ></Td>
+
                     {Object.entries(row).map(([key, value]) =>
                       // eslint-disable-next-line no-nested-ternary
                       key === 'status' ? (
                         // eslint-disable-next-line react/jsx-key
                         <Td width={15} dataLabel="Status">
                           {renderLabel(value as string)}
+                        </Td>
+                      ) : key === 'ram' ? (
+                        <Td width={5} dataLabel="RAM" modifier="truncate">
+                          <TableText>
+                            <a href="#">{row.ram}</a>
+                          </TableText>
+                        </Td>
+                      ) : key === 'ram' ? (
+                        <Td width={5} dataLabel="RAM" modifier="truncate">
+                          <TableText>
+                            <a href="#">{row.ram}</a>
+                          </TableText>
+                        </Td>
+                      ) : key === 'cpu' ? (
+                        <Td width={5} dataLabel="CPU" modifier="truncate">
+                          <TableText>
+                            <a href="#">{row.cpu}</a>
+                          </TableText>
                         </Td>
                       ) : key === 'url' ? (
                         <Td width={10} dataLabel="URL" modifier="truncate">
@@ -477,13 +650,25 @@ export const TableColumnManagement: React.FunctionComponent = () => {
                         </Td>
                       ) : (
                         <Td
-                          width={key === 'name' ? 15 : 10}
+                          modifier="truncate"
+                          width={key === 'name' ? 20 : 10}
                           dataLabel={key === 'lastModified' ? 'Last modified' : capitalize(key)}
                         >
                           {value as string}
                         </Td>
                       ),
                     )}
+                    <Td>
+                      <Icon size="xl" iconSize="md">
+                        <PlayCircleIcon />
+                      </Icon>
+                    </Td>
+                    <Td>
+                      <a>Connect</a>
+                    </Td>
+                    <Td>
+                      <a>Edit</a>
+                    </Td>
                   </>
                 </Tr>
               ))}
