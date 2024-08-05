@@ -33,7 +33,7 @@ export const columns = [
 export const rows: SampleDataRow[] = [
   {
     name: 'My Jupyter Notebook',
-    kind: 'jupiter-lab',
+    kind: 'jupyter-lab',
     image: 'jupyter_scipy_170',
     config: 'Small CPU',
     status: ['Stopped', 'Running', 'Down', 'Running (pending restart)'][0],

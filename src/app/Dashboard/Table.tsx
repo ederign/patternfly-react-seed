@@ -68,7 +68,12 @@ import {
   WizardStep,
 } from '@patternfly/react-core';
 import { CardViewBasic } from './KindCard';
-export const TableColumnManagement: React.FunctionComponent = () => {
+
+interface TableColumnManagementProps {
+  onClick: () => void; // or specify more detailed function type if needed
+}
+
+export const TableColumnManagement: React.FunctionComponent<TableColumnManagementProps> = (props) => {
   const [isModalOpen, setIsModalOpen] = React.useState(true);
   const handleModalToggle = (_event: KeyboardEvent | React.MouseEvent) => {
     setIsModalOpen((prevIsModalOpen) => !prevIsModalOpen);
@@ -653,6 +658,7 @@ export const TableColumnManagement: React.FunctionComponent = () => {
                           modifier="truncate"
                           width={key === 'name' ? 20 : 10}
                           dataLabel={key === 'lastModified' ? 'Last modified' : capitalize(key)}
+                          onClick={props.onClick}
                         >
                           {value as string}
                         </Td>
